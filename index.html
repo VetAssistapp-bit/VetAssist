@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0054)file:///C:/Users/renat/Downloads/VetAssiste_App_1.html -->
+<!-- saved from url=(0045)file:///C:/Users/renat/Downloads/index_3.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vet Assiste</title>
-<link href="./index_files/css2" rel="stylesheet">
+<link href="./index_3_files/css2" rel="stylesheet">
 <style>
 :root {
   --verde: #1a6b3c;
@@ -400,8 +400,8 @@ tr:hover td { background: var(--cinza-claro); }
     Vet Assiste
   </div>
   <div class="header-status">
-    <span class="status-dot" id="statusDot" style="background: rgb(220, 38, 38);"></span>
-    <span id="statusTxt">Erro de conexão</span>
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusTxt">Conectando...</span>
   </div>
 </header>
 
@@ -432,7 +432,7 @@ tr:hover td { background: var(--cinza-claro); }
 <main class="main">
 
   <!-- CONFIG API -->
-  <div class="api-banner" id="apiBanner" style="display: none;">
+  <div class="api-banner" id="apiBanner">
     <div>
       <strong>🔗 Configure sua API</strong>
       <div class="api-banner-txt">Cole a URL da sua API do Google Apps Script para conectar ao sistema</div>
@@ -446,7 +446,7 @@ tr:hover td { background: var(--cinza-claro); }
   <!-- DASHBOARD -->
   <div class="secao ativa" id="sec-dashboard">
     <div class="secao-titulo">Painel do Dia</div>
-    <div class="secao-sub" id="dataHoje">terça-feira, 28 de abril de 2026</div>
+    <div class="secao-sub" id="dataHoje"></div>
     <div class="grid-cards" id="cardsFinanceiro">
       <div class="loading"><div class="spinner"></div> Carregando...</div>
     </div>
@@ -619,18 +619,13 @@ tr:hover td { background: var(--cinza-claro); }
 
 <script>
 // ── CONFIG ──
-var API_URL = localStorage.getItem('vetassiste_api') || '';
+var API_URL = 'https://script.google.com/macros/s/AKfycbwp5IgWXFycmdMYv3lOgW0-dmeGY1FmvQPqfsg0Ax42CFIqWQ9dCJ6e39b-Fp-ozBQ_/exec';
 
 window.onload = function() {
   document.getElementById('dataHoje').textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  if (API_URL) {
-    document.getElementById('apiUrlInput').value = API_URL;
-    document.getElementById('apiBanner').style.display = 'none';
-    inicializar();
-  } else {
-    document.getElementById('statusTxt').textContent = 'API não configurada';
-    document.getElementById('statusDot').style.background = '#f59e0b';
-  }
+  document.getElementById('apiBanner').style.display = 'none';
+  inicializar();
+  if (false) {
   // preenche data de hoje nos campos de data
   var hoje = new Date().toISOString().split('T')[0];
   ['co-data','va-data'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=hoje; });
@@ -660,7 +655,7 @@ function inicializar() {
 function get(acao, params) {
   var url = API_URL + '?acao=' + acao;
   if (params) Object.keys(params).forEach(function(k){ url += '&'+k+'='+params[k]; });
-  return fetch(url).then(function(r){ return r.json(); });
+  return fetch(url, {redirect: 'follow'}).then(function(r){ return r.json(); });
 }
 
 function post(dados) {
